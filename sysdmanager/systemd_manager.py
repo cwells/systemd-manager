@@ -35,12 +35,10 @@
 
 import dbus
 
+UNIT_INTERFACE = "org.freedesktop.systemd1.Unit"
+SERVICE_UNIT_INTERFACE = "org.freedesktop.systemd1.Service"
 
 class SystemdManager(object):
-
-    UNIT_INTERFACE = "org.freedesktop.systemd1.Unit"
-    SERVICE_UNIT_INTERFACE = "org.freedesktop.systemd1.Service"
-
     def __init__(self):
         self.__bus = dbus.SystemBus()
 
@@ -75,7 +73,7 @@ class SystemdManager(object):
         return True
 
     def get_active_state(self, unit_name):
-        properties = self._get_unit_properties(unit_name, self.UNIT_INTERFACE)
+        properties = self._get_unit_properties(unit_name, UNIT_INTERFACE)
         if properties is None:
             return False
         return properties["ActiveState"].encode("utf-8") if "ActiveState" in properties else False
@@ -87,7 +85,7 @@ class SystemdManager(object):
         return self.get_active_state(unit_name) == b"failed"
 
     def get_error_code(self, unit_name):
-        service_properties = self._get_unit_properties(unit_name, self.SERVICE_UNIT_INTERFACE)
+        service_properties = self._get_unit_properties(unit_name, SERVICE_UNIT_INTERFACE)
         if service_properties is None:
             return None
         return self._get_exec_status(service_properties)
@@ -118,7 +116,11 @@ class SystemdManager(object):
 
 if __name__ == "__main__":
     s = SystemdManager()
+
     try:
-        print(s.list_units())
+        for u in s.list_units():
+            if u[0].endswith('.service'):
+                print(u[0])
+
     except dbus.exceptions.DBusException as error:
         print(error)
