@@ -44,6 +44,31 @@ class SystemdManager(object):
     def __init__(self):
         self.__bus = dbus.SystemBus()
 
+    def list_units(self):
+        interface = self._get_interface()
+
+        if interface is None:
+            return False
+
+        try:
+            units = interface.ListUnits(byte_arrays=True)
+            return units
+        except dbus.exceptions.DBusException as error:
+            print(error)
+            return False
+
+    def list_jobs(self):
+        interface = self._get_interface()
+
+        if interface is None:
+            return False
+
+        try:
+            return interface.ListJobs()
+        except dbus.exceptions.DBusException as error:
+            print(error)
+            return False
+
     def start_unit(self, unit_name, mode="replace"):
         interface = self._get_interface()
 
@@ -199,4 +224,6 @@ class SystemdManager(object):
 
 if __name__ == "__main__":
     s = SystemdManager()
-    print(s.get_error_code("wpa_supplicant.service"))
+    # print(s.get_error_code("wpa_supplicant.service"))
+    print(s.list_jobs())
+    print(s.list_units())
