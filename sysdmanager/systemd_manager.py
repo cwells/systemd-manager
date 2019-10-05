@@ -106,10 +106,7 @@ class SystemdManager(object):
         return self._interface().GetUnitFileState(unit_name)
 
     def _interface(self):
-        obj = self.__bus.get_object(
-            "org.freedesktop.systemd1",
-            "/org/freedesktop/systemd1"
-        )
+        obj = self.__bus.get_object("org.freedesktop.systemd1", "/org/freedesktop/systemd1")
         return dbus.Interface(obj, "org.freedesktop.systemd1.Manager")
 
 
