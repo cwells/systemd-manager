@@ -1,5 +1,7 @@
 #### Simple python D-Bus API to control systemd services
 
+This was forked from [systemd-manager](https://github.com/emlid/systemd-manager). This fork adds a couple of methods and changes the way errors are handled.
+
 ##### Prerequisities
 
 This packages uses D-Bus to control systemd. You need to have D-Bus itself and its python bindings in order to use this library. For example, on Ubuntu you need to install the following packages:
@@ -11,7 +13,7 @@ The setup.py **does not contain** the `python-dbus` dependency and you have to i
 ##### Example
 
 ```
-from sysdmanager import SystemdManager
+from systemd_manager import SystemdManager
 
 manager = SystemdManager()
 if not manager.is_active("bluetooth.service"):
@@ -21,6 +23,8 @@ if not manager.is_active("bluetooth.service"):
 
 ##### API
 
+* `SystemdManager().list_units()`
+* `SystemdManager().list_jobs()`
 * `SystemdManager().start_unit(unit_name, mode="replace")`
 	* `unit_name` - a string in form of `'*.service'`
 	* `mode` - start mode. One of `replace`, `fail`, `isolate`, `ignore-dependencies`, `ignore-requirements`. Details [here](https://www.freedesktop.org/wiki/Software/systemd/dbus/)
@@ -41,4 +45,4 @@ if not manager.is_active("bluetooth.service"):
 
 ##### Credits
 
-This package was written by [Aleksandr Aleksandrov](https://github.com/AD-Aleksandrov) and is used in [Emlid](https://emlid.com)'s products, such as Reach and Reach RS.
+This package was originally written by [Aleksandr Aleksandrov](https://github.com/AD-Aleksandrov).
