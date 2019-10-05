@@ -43,10 +43,34 @@ class SystemdManager(object):
         self.__bus = dbus.SystemBus()
 
     def list_units(self):
-        return self._interface().ListUnits()
+        return [
+            dict(zip([
+                'unit_name',
+                'description',
+                'load_state',
+                'active_state',
+                'sub_state',
+                'follower',
+                'unit_object_path',
+                'job_id',
+                'job_type',
+                'job_object_path'
+            ], unit))
+            for unit in self._interface().ListUnits()
+        ]
 
     def list_jobs(self):
-        return self._interface().ListJobs()
+        return [
+            dict(zip([
+                'job_id',
+                'unit_name',
+                'job_type',
+                'job_state',
+                'job_object_path',
+                'unit_object_path'
+            ], job))
+            for job in self._interface().ListJobs()
+        ]
 
     def start_unit(self, unit_name, mode="replace"):
         self._interface().StartUnit(unit_name, mode)
